@@ -22,6 +22,9 @@ namespace Assets.Scripts
         GameObject questionsPanel;
 
         [SerializeField]
+        GameObject battlePanel;
+
+        [SerializeField]
         GameObject addAllyCombatantButton;
 
         [SerializeField]
@@ -96,8 +99,17 @@ namespace Assets.Scripts
         private void Start()
         {
             instructions.text = "";
-            
-            
+            questionsPanel.gameObject.SetActive(false); 
+            battlePanel.gameObject.SetActive(false);
+            welcomePage.gameObject.SetActive(true);
+
+
+            addAllyCombatantButton.gameObject.SetActive(true);
+            doneWithAlliesButton.gameObject.SetActive(true);
+
+            addEnemyCombatantButton.gameObject.SetActive(false);
+            doneWithEnemiesButton.gameObject.SetActive(false);
+
             //TODO: Get a sample working
             //BattleInitiator.SampleBattle();
         }
@@ -171,7 +183,19 @@ namespace Assets.Scripts
 
         public void DoneWithEnemies()
         {
-            //TODO: Move on to next screen
+            ClearStatFields();
+            questionsPanel.gameObject.SetActive(false);
+
+            instructions.text = "";
+            battlePanel.gameObject.SetActive(true);
+
+            CalculateBattleResults();
+        }
+
+        public void CalculateBattleResults()
+        {
+            //todo: eek
+
         }
 
         void ClearStatFields()
