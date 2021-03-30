@@ -10,16 +10,53 @@ namespace Assets.Scripts
 {
     public class Battle : MonoBehaviour
     {
-        [SerializeField]
-        Text mainText;
-        [SerializeField]
-        Text welcomeText;
-        [SerializeField]
-        GameObject startButton;
+        #region Ui Elements
 
+        [SerializeField]
+        GameObject welcomePage;
+
+        [SerializeField]
+        Text instructions;
+
+        [SerializeField]
+        GameObject questionsPanel;
+
+        [SerializeField]
+        GameObject addAllyCombatantButton;
+
+        [SerializeField]
+        GameObject doneWithAlliesButton;
+
+        [SerializeField]
+        GameObject addEnemyCombatantButton;
+
+        [SerializeField]
+        GameObject doneWithEnemiesButton;
+
+        [SerializeField]
+        InputField nameTextField;
+
+        [SerializeField]
+        InputField armorClassTextField;
+
+        [SerializeField]
+        InputField healthTextField;
+
+        [SerializeField]
+        InputField attackModifierTextField;
+
+        [SerializeField]
+        InputField attackDamageTextField;
+
+        [SerializeField]
+        InputField numberOfAttacksTextField;
+
+        #endregion
 
         #region Stats
-        int numberOfCombatants;
+
+        List<Combatant> allyCombatants = new List<Combatant>();
+        List<Combatant> enemyCombatants = new List<Combatant>();
 
         //TODO: Generalize these
         int numberOfUngor = 0;
@@ -58,17 +95,93 @@ namespace Assets.Scripts
 
         private void Start()
         {
-            BattleInitiator.SampleBattle();
+            instructions.text = "";
+            
+            
+            //TODO: Get a sample working
+            //BattleInitiator.SampleBattle();
         }
 
 
         public void Initiate()
         {
-            welcomeText.text = "";
-            startButton.gameObject.SetActive(false);
+            welcomePage.gameObject.SetActive(false);
+            questionsPanel.gameObject.SetActive(true);
 
-            //TODO: Start the simulator
-            mainText.text = "";
+            instructions.text = "Enter first ally's stats";
+            addAllyCombatantButton.gameObject.SetActive(true);
+        }
+
+        public void AddAllyCombatant()
+        {
+            var newName = nameTextField.GetComponent<InputField>().text;
+            var newAC = int.Parse(armorClassTextField.GetComponent<InputField>().text);
+            var newHealth = int.Parse(healthTextField.GetComponent<InputField>().text);
+            var newAttackMod = int.Parse(attackModifierTextField.GetComponent<InputField>().text);
+            var newDamage = int.Parse(attackDamageTextField.GetComponent<InputField>().text);
+            var newNumberOfAttacks = int.Parse(numberOfAttacksTextField.GetComponent<InputField>().text);
+
+            allyCombatants.Add(new Combatant() {
+                Name = newName,
+                Enemy = false,
+                ArmorClass = newAC,
+                Health = newHealth,
+                AttackModifier = newAttackMod,
+                AttackDamage = newDamage,
+                NumberOfAttacks = newNumberOfAttacks
+            });
+
+            ClearStatFields();
+        }
+
+        public void DoneWithAllies()
+        {
+            ClearStatFields();
+
+            instructions.text = "Enter first enemy's stats";
+            addAllyCombatantButton.gameObject.SetActive(false);
+            doneWithAlliesButton.gameObject.SetActive(false);
+
+            addEnemyCombatantButton.gameObject.SetActive(true);
+            doneWithEnemiesButton.gameObject.SetActive(true);
+        }
+
+        public void AddEnemyCombatant()
+        {
+            var newName = nameTextField.GetComponent<InputField>().text;
+            var newAC = int.Parse(armorClassTextField.GetComponent<InputField>().text);
+            var newHealth = int.Parse(healthTextField.GetComponent<InputField>().text);
+            var newAttackMod = int.Parse(attackModifierTextField.GetComponent<InputField>().text);
+            var newDamage = int.Parse(attackDamageTextField.GetComponent<InputField>().text);
+            var newNumberOfAttacks = int.Parse(numberOfAttacksTextField.GetComponent<InputField>().text);
+
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = newName,
+                Enemy = false,
+                ArmorClass = newAC,
+                Health = newHealth,
+                AttackModifier = newAttackMod,
+                AttackDamage = newDamage,
+                NumberOfAttacks = newNumberOfAttacks
+            });
+
+            ClearStatFields();
+        }
+
+        public void DoneWithEnemies()
+        {
+            //TODO: Move on to next screen
+        }
+
+        void ClearStatFields()
+        {
+            nameTextField.GetComponent<InputField>().text = "";
+            armorClassTextField.GetComponent<InputField>().text = "";
+            healthTextField.GetComponent<InputField>().text = "";
+            attackModifierTextField.GetComponent<InputField>().text = "";
+            attackDamageTextField.GetComponent<InputField>().text = "";
+            numberOfAttacksTextField.GetComponent<InputField>().text = "";
         }
     }
 }
