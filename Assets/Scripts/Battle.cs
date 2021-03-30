@@ -71,6 +71,7 @@ namespace Assets.Scripts
             addEnemyCombatantButton.gameObject.SetActive(false);
             doneWithEnemiesButton.gameObject.SetActive(false);
 
+            //TODO: Make this a button
             SampleBattle();
         }
 
@@ -85,6 +86,7 @@ namespace Assets.Scripts
 
         public void AddAllyCombatant()
         {
+            //TODO: Add a way to add multiple allies of the same type
             var newName = nameTextField.GetComponent<InputField>().text;
             var newAC = int.Parse(armorClassTextField.GetComponent<InputField>().text);
             var newHealth = int.Parse(healthTextField.GetComponent<InputField>().text);
@@ -92,9 +94,11 @@ namespace Assets.Scripts
             var newDamage = int.Parse(attackDamageTextField.GetComponent<InputField>().text);
             var newNumberOfAttacks = int.Parse(numberOfAttacksTextField.GetComponent<InputField>().text);
 
+
+
             allyCombatants.Add(new Combatant()
             {
-                Name = newName,
+                Name = $"{newName}_{Guid.NewGuid().GetHashCode().ToString()}",
                 Enemy = false,
                 ArmorClass = newAC,
                 Health = newHealth,
@@ -120,6 +124,7 @@ namespace Assets.Scripts
 
         public void AddEnemyCombatant()
         {
+            //TODO: Add a way to add multiple enemies of the same type
             var newName = nameTextField.GetComponent<InputField>().text;
             var newAC = int.Parse(armorClassTextField.GetComponent<InputField>().text);
             var newHealth = int.Parse(healthTextField.GetComponent<InputField>().text);
@@ -129,7 +134,7 @@ namespace Assets.Scripts
 
             enemyCombatants.Add(new Combatant()
             {
-                Name = newName,
+                Name = $"{newName}_{Guid.NewGuid().GetHashCode().ToString()}",
                 Enemy = false,
                 ArmorClass = newAC,
                 Health = newHealth,
@@ -158,13 +163,12 @@ namespace Assets.Scripts
 
             for (int x = 0; x < allyCombatants.Count; x++)
             {
-                if(allyCombatants[x].Health > 0)
+                if (allyCombatants[x].Health > 0)
                 {
                     List<Combatant> livingPoolOfEnemies = enemyCombatants.Where(e => e.Health > 0).ToList();
 
                     var attackRoll = random.Next(0, 19) + allyCombatants[x].AttackModifier;
-                    var randomEnemy = enemyCombatants[random.Next(0, enemyCombatants.Count)];
-                    
+                    var randomEnemy = livingPoolOfEnemies[random.Next(0, livingPoolOfEnemies.Count)];
 
                     if (attackRoll >= randomEnemy.ArmorClass)
                     {
@@ -178,15 +182,17 @@ namespace Assets.Scripts
                         Debug.Log($"{randomEnemy.Name} was not hit by {allyCombatants[x].Name}");
                 }
                 else
-                    Debug.Log($"{allyCombatants[x].Name} is slain...");
+                    Debug.Log($"{allyCombatants[x].Name} is dead and did nothing...");
             }
 
             for (int y = 0; y < enemyCombatants.Count; y++)
             {
-                if(enemyCombatants[y].Health > 0)
+                if (enemyCombatants[y].Health > 0)
                 {
+                    List<Combatant> livingPoolOfAllies = allyCombatants.Where(e => e.Health > 0).ToList();
+
                     var attackRoll = random.Next(0, 19) + enemyCombatants[y].AttackModifier;
-                    var randomAlly = allyCombatants[random.Next(0, allyCombatants.Count)];
+                    var randomAlly = livingPoolOfAllies[random.Next(0, livingPoolOfAllies.Count)];
 
                     if (attackRoll >= randomAlly.ArmorClass)
                     {
@@ -200,7 +206,7 @@ namespace Assets.Scripts
                         Debug.Log($"{randomAlly.Name} was not hit by {enemyCombatants[y].Name}");
                 }
                 else
-                    Debug.Log($"{enemyCombatants[y].Name} is slain...");
+                    Debug.Log($"{enemyCombatants[y].Name} is dead and did nothing...");
             }
 
             //TODO: Add these numbers and texts to the UI
@@ -220,138 +226,499 @@ namespace Assets.Scripts
         {
             Debug.Log("Kicking off a simple example battle...");
 
-            var ungor = new Combatant()
+            #region Ungor
+            allyCombatants.Add(new Combatant()
             {
-                Name = "Ungor",
+                Name = $"Ungor_{Guid.NewGuid().GetHashCode().ToString()}",
                 Enemy = false,
                 ArmorClass = 13,
                 Health = 15, //2d8+6
                 AttackModifier = 5,
                 AttackDamage = 9,
                 NumberOfAttacks = 1
-            };
-
-            var gor = new Combatant()
+            });
+            allyCombatants.Add(new Combatant()
             {
-                Name = "Gor",
+                Name = $"Ungor_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 13,
+                Health = 15, //2d8+6
+                AttackModifier = 5,
+                AttackDamage = 9,
+                NumberOfAttacks = 1
+            });
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Ungor_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 13,
+                Health = 15, //2d8+6
+                AttackModifier = 5,
+                AttackDamage = 9,
+                NumberOfAttacks = 1
+            });
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Ungor_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 13,
+                Health = 15, //2d8+6
+                AttackModifier = 5,
+                AttackDamage = 9,
+                NumberOfAttacks = 1
+            });
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Ungor_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 13,
+                Health = 15, //2d8+6
+                AttackModifier = 5,
+                AttackDamage = 9,
+                NumberOfAttacks = 1
+            });
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Ungor_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 13,
+                Health = 15, //2d8+6
+                AttackModifier = 5,
+                AttackDamage = 9,
+                NumberOfAttacks = 1
+            });
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Ungor_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 13,
+                Health = 15, //2d8+6
+                AttackModifier = 5,
+                AttackDamage = 9,
+                NumberOfAttacks = 1
+            });
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Ungor_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 13,
+                Health = 15, //2d8+6
+                AttackModifier = 5,
+                AttackDamage = 9,
+                NumberOfAttacks = 1
+            });
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Ungor_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 13,
+                Health = 15, //2d8+6
+                AttackModifier = 5,
+                AttackDamage = 9,
+                NumberOfAttacks = 1
+            });
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Ungor_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 13,
+                Health = 15, //2d8+6
+                AttackModifier = 5,
+                AttackDamage = 9,
+                NumberOfAttacks = 1
+            });
+            #endregion
+
+            #region Gor
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Gor_{Guid.NewGuid().GetHashCode().ToString()}",
                 Enemy = false,
                 ArmorClass = 13,
                 Health = 42, //5d8+20
                 AttackModifier = 6,
                 AttackDamage = 7,
                 NumberOfAttacks = 1
-            };
-
-            var bestigor = new Combatant()
+            });
+            allyCombatants.Add(new Combatant()
             {
-                Name = "Bestigor",
+                Name = $"Gor_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 13,
+                Health = 42, //5d8+20
+                AttackModifier = 6,
+                AttackDamage = 7,
+                NumberOfAttacks = 1
+            });
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Gor_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 13,
+                Health = 42, //5d8+20
+                AttackModifier = 6,
+                AttackDamage = 7,
+                NumberOfAttacks = 1
+            });
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Gor_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 13,
+                Health = 42, //5d8+20
+                AttackModifier = 6,
+                AttackDamage = 7,
+                NumberOfAttacks = 1
+            });
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Gor_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 13,
+                Health = 42, //5d8+20
+                AttackModifier = 6,
+                AttackDamage = 7,
+                NumberOfAttacks = 1
+            });
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Gor_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 13,
+                Health = 42, //5d8+20
+                AttackModifier = 6,
+                AttackDamage = 7,
+                NumberOfAttacks = 1
+            });
+            #endregion
+
+            #region Bestigor
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Bestigor_{Guid.NewGuid().GetHashCode().ToString()}",
                 Enemy = false,
                 ArmorClass = 16,
                 Health = 93, //11d8+44
                 AttackModifier = 6,
                 AttackDamage = 15,
                 NumberOfAttacks = 1
-            };
-
-            var commoner = new Combatant()
+            });
+            allyCombatants.Add(new Combatant()
             {
-                Name = "Commoner",
+                Name = $"Bestigor_{Guid.NewGuid().GetHashCode().ToString()}",
                 Enemy = false,
-                ArmorClass = 10,
-                Health = 4, //1d4
-                AttackModifier = 2,
-                AttackDamage = 2,
+                ArmorClass = 16,
+                Health = 93, //11d8+44
+                AttackModifier = 6,
+                AttackDamage = 15,
                 NumberOfAttacks = 1
-            };
-
-            var guard = new Combatant()
+            });
+            allyCombatants.Add(new Combatant()
             {
-                Name = "Guard",
+                Name = $"Bestigor_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 16,
+                Health = 93, //11d8+44
+                AttackModifier = 6,
+                AttackDamage = 15,
+                NumberOfAttacks = 1
+            });
+            #endregion
+
+            #region Guard
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Guard_{Guid.NewGuid().GetHashCode().ToString()}",
                 Enemy = false,
                 ArmorClass = 16,
                 Health = 11, //2d8+2
                 AttackModifier = 3,
                 AttackDamage = 4,
                 NumberOfAttacks = 1
-            };
-
-            var dretch = new Combatant()
+            });
+            allyCombatants.Add(new Combatant()
             {
-                Name = "Dretch",
+                Name = $"Guard_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 16,
+                Health = 11, //2d8+2
+                AttackModifier = 3,
+                AttackDamage = 4,
+                NumberOfAttacks = 1
+            });
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Guard_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 16,
+                Health = 11, //2d8+2
+                AttackModifier = 3,
+                AttackDamage = 4,
+                NumberOfAttacks = 1
+            });
+            #endregion
+
+            #region Commoner
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Commoner_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 10,
+                Health = 4, //1d4
+                AttackModifier = 2,
+                AttackDamage = 2,
+                NumberOfAttacks = 1
+            });
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Commoner_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 10,
+                Health = 4, //1d4
+                AttackModifier = 2,
+                AttackDamage = 2,
+                NumberOfAttacks = 1
+            });
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Commoner_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 10,
+                Health = 4, //1d4
+                AttackModifier = 2,
+                AttackDamage = 2,
+                NumberOfAttacks = 1
+            });
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Commoner_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 10,
+                Health = 4, //1d4
+                AttackModifier = 2,
+                AttackDamage = 2,
+                NumberOfAttacks = 1
+            });
+            allyCombatants.Add(new Combatant()
+            {
+                Name = $"Commoner_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = false,
+                ArmorClass = 10,
+                Health = 4, //1d4
+                AttackModifier = 2,
+                AttackDamage = 2,
+                NumberOfAttacks = 1
+            });
+            #endregion
+
+            #region Dretch
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = $"Dretch_{Guid.NewGuid().GetHashCode().ToString()}",
                 Enemy = true,
                 ArmorClass = 11,
                 Health = 18, //4d6+4
                 AttackModifier = 2,
                 AttackDamage = 4,
                 NumberOfAttacks = 1
-            };
-
-            var maw = new Combatant()
+            });
+            enemyCombatants.Add(new Combatant()
             {
-                Name = "Maw",
+                Name = $"Dretch_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = true,
+                ArmorClass = 11,
+                Health = 18, //4d6+4
+                AttackModifier = 2,
+                AttackDamage = 4,
+                NumberOfAttacks = 1
+            });
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = $"Dretch_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = true,
+                ArmorClass = 11,
+                Health = 18, //4d6+4
+                AttackModifier = 2,
+                AttackDamage = 4,
+                NumberOfAttacks = 1
+            });
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = $"Dretch_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = true,
+                ArmorClass = 11,
+                Health = 18, //4d6+4
+                AttackModifier = 2,
+                AttackDamage = 4,
+                NumberOfAttacks = 1
+            });
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = $"Dretch_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = true,
+                ArmorClass = 11,
+                Health = 18, //4d6+4
+                AttackModifier = 2,
+                AttackDamage = 4,
+                NumberOfAttacks = 1
+            });
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = $"Dretch_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = true,
+                ArmorClass = 11,
+                Health = 18, //4d6+4
+                AttackModifier = 2,
+                AttackDamage = 4,
+                NumberOfAttacks = 1
+            });
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = $"Dretch_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = true,
+                ArmorClass = 11,
+                Health = 18, //4d6+4
+                AttackModifier = 2,
+                AttackDamage = 4,
+                NumberOfAttacks = 1
+            });
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = $"Dretch_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = true,
+                ArmorClass = 11,
+                Health = 18, //4d6+4
+                AttackModifier = 2,
+                AttackDamage = 4,
+                NumberOfAttacks = 1
+            });
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = $"Dretch_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = true,
+                ArmorClass = 11,
+                Health = 18, //4d6+4
+                AttackModifier = 2,
+                AttackDamage = 4,
+                NumberOfAttacks = 1
+            });
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = $"Dretch_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = true,
+                ArmorClass = 11,
+                Health = 18, //4d6+4
+                AttackModifier = 2,
+                AttackDamage = 4,
+                NumberOfAttacks = 1
+            });
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = $"Dretch_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = true,
+                ArmorClass = 11,
+                Health = 18, //4d6+4
+                AttackModifier = 2,
+                AttackDamage = 4,
+                NumberOfAttacks = 1
+            });
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = $"Dretch_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = true,
+                ArmorClass = 11,
+                Health = 18, //4d6+4
+                AttackModifier = 2,
+                AttackDamage = 4,
+                NumberOfAttacks = 1
+            });
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = $"Dretch_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = true,
+                ArmorClass = 11,
+                Health = 18, //4d6+4
+                AttackModifier = 2,
+                AttackDamage = 4,
+                NumberOfAttacks = 1
+            });
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = $"Dretch_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = true,
+                ArmorClass = 11,
+                Health = 18, //4d6+4
+                AttackModifier = 2,
+                AttackDamage = 4,
+                NumberOfAttacks = 1
+            });
+            #endregion
+
+            #region Maw
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = $"Maw_{Guid.NewGuid().GetHashCode().ToString()}",
                 Enemy = true,
                 ArmorClass = 13,
                 Health = 33, //6d+6
                 AttackModifier = 4,
                 AttackDamage = 8,
                 NumberOfAttacks = 1
-            };
-
-            var hezrou = new Combatant()
+            });
+            enemyCombatants.Add(new Combatant()
             {
-                Name = "Hezrou",
+                Name = $"Maw_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = true,
+                ArmorClass = 13,
+                Health = 33, //6d+6
+                AttackModifier = 4,
+                AttackDamage = 8,
+                NumberOfAttacks = 1
+            });
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = $"Maw_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = true,
+                ArmorClass = 13,
+                Health = 33, //6d+6
+                AttackModifier = 4,
+                AttackDamage = 8,
+                NumberOfAttacks = 1
+            });
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = $"Maw_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = true,
+                ArmorClass = 13,
+                Health = 33, //6d+6
+                AttackModifier = 4,
+                AttackDamage = 8,
+                NumberOfAttacks = 1
+            });
+            #endregion
+
+            #region Hezrou
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = $"Hezrou_{Guid.NewGuid().GetHashCode().ToString()}",
                 Enemy = true,
                 ArmorClass = 63,
                 Health = 136, //13d10+65
                 AttackModifier = 4,
                 AttackDamage = 8,
                 NumberOfAttacks = 3
-            };
-
-            allyCombatants.Add(ungor);
-            allyCombatants.Add(ungor);
-            allyCombatants.Add(ungor);
-            allyCombatants.Add(ungor);
-            allyCombatants.Add(ungor);
-            allyCombatants.Add(ungor);
-            allyCombatants.Add(ungor);
-            allyCombatants.Add(ungor);
-            allyCombatants.Add(ungor);
-            allyCombatants.Add(ungor);
-
-            allyCombatants.Add(gor);
-            allyCombatants.Add(gor);
-            allyCombatants.Add(gor);
-            allyCombatants.Add(gor);
-            allyCombatants.Add(gor);
-            allyCombatants.Add(gor);
-
-            allyCombatants.Add(bestigor);
-            allyCombatants.Add(bestigor);
-            allyCombatants.Add(bestigor);
-
-            enemyCombatants.Add(dretch);
-            enemyCombatants.Add(dretch);
-            enemyCombatants.Add(dretch);
-            enemyCombatants.Add(dretch);
-            enemyCombatants.Add(dretch);
-            enemyCombatants.Add(dretch);
-            enemyCombatants.Add(dretch);
-            enemyCombatants.Add(dretch);
-            enemyCombatants.Add(dretch);
-            enemyCombatants.Add(dretch);
-            enemyCombatants.Add(dretch);
-            enemyCombatants.Add(dretch);
-            enemyCombatants.Add(dretch);
-            enemyCombatants.Add(dretch);
-
-            enemyCombatants.Add(maw);
-            enemyCombatants.Add(maw);
-            enemyCombatants.Add(maw);
-            enemyCombatants.Add(maw);
-
-            enemyCombatants.Add(hezrou);
-            enemyCombatants.Add(hezrou);
+            });
+            enemyCombatants.Add(new Combatant()
+            {
+                Name = $"Hezrou_{Guid.NewGuid().GetHashCode().ToString()}",
+                Enemy = true,
+                ArmorClass = 63,
+                Health = 136, //13d10+65
+                AttackModifier = 4,
+                AttackDamage = 8,
+                NumberOfAttacks = 3
+            });
+            #endregion
         }
     }
 }

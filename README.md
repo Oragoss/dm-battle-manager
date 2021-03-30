@@ -3,3 +3,7 @@ This is a tool to help Dungeon Masters manage large scale npc battles. Say for e
 
 ## Instructions on how to contribute
 - You must install Unity
+
+
+### Potential Issues
+This has not been tested on Mac or Linux
