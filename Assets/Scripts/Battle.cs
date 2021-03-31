@@ -10,6 +10,20 @@ namespace Assets.Scripts
     {
         #region Ui Elements
 
+        [Header("Battle Result Variables")]
+        [Tooltip("How far away you want a unit label to be from the edge or center on the x axis.")]
+        [SerializeField]
+        float distanceFromTheEdge = 150;
+
+        [Tooltip("How far away you want a unit label to be from each other on the y axis.")]
+        [SerializeField]
+        float distanceFromOtherListItems = 25;
+
+        [Tooltip("Where do you want the unit labels to start on the y axis.")]
+        [SerializeField]
+        float startingPosition = 120;
+
+        [Header("UI Elements")]
         [SerializeField]
         GameObject welcomePage;
 
@@ -51,6 +65,19 @@ namespace Assets.Scripts
 
         [SerializeField]
         InputField numberOfAttacksTextField;
+
+        [SerializeField]
+        Text unitResultLabelTextPrefab;
+        [SerializeField]
+        Text unitResultTextPrefab;
+
+        [SerializeField]
+        GameObject allyConent;
+        [SerializeField]
+        GameObject enemyContent;
+
+        [SerializeField]
+        Text roundTitle;
 
         #endregion
 
@@ -161,8 +188,9 @@ namespace Assets.Scripts
         {
             var random = new System.Random(Mathf.Abs(Guid.NewGuid().GetHashCode()));
             Debug.Log($"Round {roundNumber}: FIGHT!");
+            roundTitle.text = $"Round {roundNumber}: FIGHT!";
             roundNumber++;
-
+            ClearBattleResults();
             try
             {
                 for (int x = 0; x < allyCombatants.Count; x++)
@@ -173,6 +201,7 @@ namespace Assets.Scripts
                         if (livingPoolOfEnemies != null && livingPoolOfEnemies.Count <= 0)
                         {
                             Debug.Log($"{allyCombatants[x].Name} stands victorious with no more enemies to fight.");
+                            InstantiateAllyBattleResultUiElements(allyCombatants[x].Name, "stands victorious with no more enemies to fight.", x);
                             continue;
                         }
                         var randomEnemy = livingPoolOfEnemies[random.Next(0, livingPoolOfEnemies.Count)];
@@ -197,6 +226,7 @@ namespace Assets.Scripts
                                             randomEnemy = livingPoolOfEnemies[random.Next(0, livingPoolOfEnemies.Count)];
                                         else
                                         {
+                                            InstantiateAllyBattleResultUiElements(allyCombatants[x].Name, "stands victorious with no more enemies to fight.", x);
                                             Debug.Log($"{allyCombatants[x].Name} stands victorious with no more enemies to fight.");
                                             continue;
                                         }
@@ -208,10 +238,13 @@ namespace Assets.Scripts
                             else
                                 Debug.Log($"{randomEnemy.Name} was not hit by {allyCombatants[x].Name}");
                         }
+                        InstantiateAllyBattleResultUiElements(allyCombatants[x].Name, allyCombatants[x].Health.ToString(), x);
                     }
-                    //else
-                    //    //TODO: Make this show an X icon or something next to their name
-                    //    Debug.Log($"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX{allyCombatants[x].Name} is dead and did nothing...");
+                    else
+                    {
+                        InstantiateAllyBattleResultUiElements(allyCombatants[x].Name, "X", x);
+                        Debug.Log($"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX{allyCombatants[x].Name} is dead and did nothing...");
+                    }
                 }
             }
             catch (Exception ex)
@@ -221,61 +254,99 @@ namespace Assets.Scripts
 
             try
             {
-                for (int x = 0; x < enemyCombatants.Count; x++)
+                for (int y = 0; y < enemyCombatants.Count; y++)
                 {
-                    if (enemyCombatants[x].Health > 0)
+                    if (enemyCombatants[y].Health > 0)
                     {
                         List<Combatant> livingPoolOfAllies = allyCombatants.Where(e => e.Health > 0).ToList();
                         if (livingPoolOfAllies != null && livingPoolOfAllies.Count <= 0)
                         {
-                            Debug.Log($"{enemyCombatants[x].Name} stands victorious with no more enemies to fight.");
+                            Debug.Log($"{enemyCombatants[y].Name} stands victorious with no more enemies to fight.");
+                            InstantiateAllyBattleResultUiElements(enemyCombatants[y].Name, "stands victorious with no more enemies to fight.", y);
                             continue;
                         }
                         var randomAlly = livingPoolOfAllies[random.Next(0, livingPoolOfAllies.Count)];
 
-                        for (int i = 0; i < enemyCombatants[x].NumberOfAttacks; i++)
+                        for (int i = 0; i < enemyCombatants[y].NumberOfAttacks; i++)
                         {
-                            var attackRoll = random.Next(0, 19) + enemyCombatants[x].AttackModifier;
+                            var attackRoll = random.Next(0, 19) + enemyCombatants[y].AttackModifier;
 
                             if (attackRoll >= randomAlly.ArmorClass)
                             {
-                                randomAlly.Health -= enemyCombatants[x].AttackDamage;
+                                randomAlly.Health -= enemyCombatants[y].AttackDamage;
                                 if (randomAlly.Health <= 0)
                                 {
                                     Debug.Log($"<color=yellow>{randomAlly.Name} has been slain!</color>");
-                                    var multiAttack = enemyCombatants[x].NumberOfAttacks - 1 <= 0 ? 1 : enemyCombatants[x].NumberOfAttacks;
+                                    var multiAttack = enemyCombatants[y].NumberOfAttacks - 1 <= 0 ? 1 : enemyCombatants[y].NumberOfAttacks;
                                     if (i < multiAttack)
                                     {
                                         //Target a new living enemy
-                                        Debug.Log($"{enemyCombatants[x].Name} has attacked {i + 1} times");
+                                        Debug.Log($"{enemyCombatants[y].Name} has attacked {i + 1} times");
                                         livingPoolOfAllies = allyCombatants.Where(e => e.Health > 0).ToList();
                                         if (livingPoolOfAllies != null && livingPoolOfAllies.Count > 0)
                                             randomAlly = livingPoolOfAllies[random.Next(0, livingPoolOfAllies.Count)];
                                         else
                                         {
-                                            Debug.Log($"{enemyCombatants[x].Name} stands victorious with no more enemies to fight.");
+                                            Debug.Log($"{enemyCombatants[y].Name} stands victorious with no more enemies to fight.");
                                             continue;
                                         }
                                     }
                                 }
                                 else
-                                    Debug.Log($"{randomAlly.Name} took {enemyCombatants[x].AttackDamage} damage from {enemyCombatants[x].Name}! He now has {randomAlly.Health} health.");
+                                    Debug.Log($"{randomAlly.Name} took {enemyCombatants[y].AttackDamage} damage from {enemyCombatants[y].Name}! He now has {randomAlly.Health} health.");
                             }
                             else
-                                Debug.Log($"{randomAlly.Name} was not hit by {enemyCombatants[x].Name}");
+                                Debug.Log($"{randomAlly.Name} was not hit by {enemyCombatants[y].Name}");
                         }
+                        InstantiateEnemyBattleResultUiElements(enemyCombatants[y].Name, enemyCombatants[y].Health.ToString(), y);
                     }
-                    //else
-                    //    //TODO: Make this show an X icon or something next to their name
-                    //    Debug.Log($"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX{enemyCombatants[x].Name} is dead and did nothing...");
+                    else
+                    {
+                        InstantiateEnemyBattleResultUiElements(enemyCombatants[y].Name, "X", y);
+                        Debug.Log($"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX{enemyCombatants[y].Name} is dead and did nothing...");
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Debug.LogError("Error calculating allies' actions: " + ex.Message);
             }
+        }
 
-            //TODO: Add these numbers and texts to the UI
+        public void InstantiateAllyBattleResultUiElements(string name, string message, int itemNumber)
+        {
+            //TODO: Set a dynamic anchor for the text fields
+            Text allyUnitResultLabelTextField = Instantiate(unitResultLabelTextPrefab, new Vector3(transform.position.x - 300, -((transform.position.y - startingPosition) + distanceFromOtherListItems  * itemNumber), transform.position.z), transform.rotation);
+            allyUnitResultLabelTextField.transform.SetParent(allyConent.transform, false);
+            allyUnitResultLabelTextField.text = name;
+
+            Text allyUnitResultTextField = Instantiate(unitResultTextPrefab, new Vector3(transform.position.x + 150, -((transform.position.y - startingPosition) + distanceFromOtherListItems  * itemNumber), transform.position.z), transform.rotation);
+            allyUnitResultTextField.transform.SetParent(allyConent.transform, false);
+            allyUnitResultTextField.text = message;       
+        }
+
+        public void InstantiateEnemyBattleResultUiElements(string name, string message, int itemNumber)
+        {
+            //TODO: Set a dynamic anchor for the text fields
+            Text enemyUnitResultLabelTextField = Instantiate(unitResultLabelTextPrefab, new Vector3(transform.position.x - 300, -((transform.position.y - startingPosition) + distanceFromOtherListItems  * itemNumber), transform.position.z), transform.rotation);
+            enemyUnitResultLabelTextField.transform.SetParent(enemyContent.transform, false);
+            enemyUnitResultLabelTextField.text = name;
+
+            Text enemyUnitResultTextField = Instantiate(unitResultTextPrefab, new Vector3(transform.position.x + 150, -((transform.position.y - startingPosition) + distanceFromOtherListItems  * itemNumber), transform.position.z), transform.rotation);
+            enemyUnitResultTextField.transform.SetParent(enemyContent.transform, false);
+            enemyUnitResultTextField.text = message;
+        }
+
+        public void ClearBattleResults()
+        {
+            var allyChildren = new List<GameObject>();
+            foreach (Transform child in allyConent.transform) allyChildren.Add(child.gameObject);
+            allyChildren.ForEach(child => Destroy(child));
+
+            var enemyChildren = new List<GameObject>();
+            foreach (Transform child in enemyContent.transform) allyChildren.Add(child.gameObject);
+            allyChildren.ForEach(child => Destroy(child));
+
         }
 
         void ClearStatFields()
